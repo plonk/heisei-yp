@@ -1,7 +1,7 @@
-.PHONY: index.txt all
+.PHONY: run index.txt
 
-all:
-	unison -silent ~/g/inclusive-yp ssh://sakura//home/plonk/domains/inclusive-yp
+run:
+	bundle exec rackup
 
 index.txt:
 	bundle exec ruby generate.rb > index.txt.new && mv index.txt.new index.txt

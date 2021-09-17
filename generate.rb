@@ -11,13 +11,14 @@ end
 YP_ENDPOINT = "49.212.151.50:7146"
 
 def make_status_line
-  io = open("http://#{YP_ENDPOINT}/html/ja/index.html")
+  io = URI.open("http://#{YP_ENDPOINT}/html/ja/index.html")
   doc = Nokogiri::HTML(io)
   uptime = doc.css("td")[9].text
 
   info = ChannelInfo.new
   info.name = "平成YP◆Status"
-  info.description = "Uptime: #{uptime}"
+  time = Time.now.strftime("%Y/%m/%d %H:%M:%S %p %Z")
+  info.description = "更新時刻: #{time} 稼働時間: #{uptime}"
   info.listeners = "-9"
   info.relays = "-9"
   info.ip = ""
@@ -26,7 +27,7 @@ def make_status_line
   return info
 end
 
-io = open("http://#{YP_ENDPOINT}/admin?cmd=viewxml")
+io = URI.open("http://#{YP_ENDPOINT}/admin?cmd=viewxml")
 doc = Nokogiri::XML(io)
 
 doc.css("channels_found > channel").each do |elt|
