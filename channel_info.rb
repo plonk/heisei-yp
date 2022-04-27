@@ -35,7 +35,7 @@ class ChannelInfo
      :track_title, :track_contact,
      :name_url_encoded, :time,
      :status, :comment, :direct].map { |key|
-      clean(self.__send__(key))
+      ChannelInfo.escape_delim(clean(self.__send__(key)))
     }.join("<>")
   end
 
@@ -43,13 +43,26 @@ class ChannelInfo
     str.gsub(/[\x00-\x1f]/, ' ').gsub(/ +/, ' ').strip
   end
 
-  def escape(str)
-    str.gsub(/&|<|>/) { |ch|
-      case ch
-      when "&" then "&amp;"
-      when "<" then "&lt;"
-      when ">" then "&gt;"
-      end
-    }
+  class << self
+
+    def escape_delim(str)
+      str.gsub(/[<>]/) { |ch|
+        case ch
+        when "<" then "&lt;"
+        when ">" then "&gt;"
+        end
+      }
+    end
+
+    def escape(str)
+      str.gsub(/&|<|>/) { |ch|
+        case ch
+        when "&" then "&amp;"
+        when "<" then "&lt;"
+        when ">" then "&gt;"
+        end
+      }
+    end
+
   end
 end
